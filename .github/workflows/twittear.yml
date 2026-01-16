@@ -1,0 +1,32 @@
+name: Publicar feriado
+
+on:
+  schedule:
+    # 3 veces al día: 9:00, 15:00 y 21:00 hora Argentina (UTC-3)
+    - cron: '0 12 * * *'  # 09:00 Argentina
+    - cron: '0 18 * * *'  # 15:00 Argentina
+    - cron: '0 0 * * *'   # 21:00 Argentina
+  workflow_dispatch:
+
+jobs:
+  publicar_feriado:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Publicar tweet
+        run: python main.py
+        env:
+          TWITTER_API_KEY: ${{ secrets.TWITTER_API_KEY }}
+          TWITTER_KEY_SECRET: ${{ secrets.TWITTER_KEY_SECRET }}
+          TWITTER_ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
